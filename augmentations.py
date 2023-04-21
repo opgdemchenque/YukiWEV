@@ -6,7 +6,6 @@
 
 import logging
 
-from torchvision import transforms
 
 from .transforms import (
     GaussianBlur,
@@ -51,7 +50,6 @@ class DataAugmentationDINO(object):
             ]
         )
 
-        self.geometric_augmentation_local = transforms.Compose(
             [
                 transforms.RandomResizedCrop(
                     local_crops_size, scale=local_crops_scale, interpolation=transforms.InterpolationMode.BICUBIC
@@ -94,7 +92,6 @@ class DataAugmentationDINO(object):
         self.global_transfo2 = transforms.Compose([color_jittering, global_transfo2_extra, self.normalize])
         self.local_transfo = transforms.Compose([color_jittering, local_transfo_extra, self.normalize])
 
-    def __call__(self, image):
         output = {}
 
         # global crops:
@@ -110,7 +107,6 @@ class DataAugmentationDINO(object):
         output["global_crops_teacher"] = [global_crop_1, global_crop_2]
 
         # local crops:
-        local_crops = [
             self.local_transfo(self.geometric_augmentation_local(image)) for _ in range(self.local_crops_number)
         ]
         output["local_crops"] = local_crops
